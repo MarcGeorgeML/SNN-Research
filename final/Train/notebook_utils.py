@@ -42,7 +42,7 @@ def evaluate_model(model, loader, device="cuda"):
     all_preds = []
     all_labels = []
 
-    class_names = ["happy", "sad", "neutral", "fear", "disgust"]
+    class_names = ["angry", "disgust", "fear", "happy", "neutral", "sad"]
 
     print("Running inference...")
     with torch.no_grad():
