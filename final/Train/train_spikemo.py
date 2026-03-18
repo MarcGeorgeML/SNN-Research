@@ -10,6 +10,11 @@ import random
 import numpy as np
 
 from spikingjelly.activation_based import functional
+import sys
+import os
+
+# # Add parent directory to path so imports work
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from dataset.build_dataloader import build_dataloaders
 from Model.SpikEmo_Model import SpikEmo
