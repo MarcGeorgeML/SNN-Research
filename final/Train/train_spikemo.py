@@ -1,3 +1,5 @@
+
+import json
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -323,7 +325,18 @@ class Trainer:
 
 if __name__ == "__main__":
 
+
+    with open("finetuning/best_config.json", "r", encoding="utf-8") as f:
+        best = json.load(f)
+
     config = Config()
+    config.lr = best["params"]["lr"]
+    config.weight_decay = best["params"]["weight_decay"]
+    config.grad_clip = best["params"]["grad_clip"]
+    # Loss weights from user_attrs (normalized)
+    config.loss_HGR = best["user_attrs"]["loss_HGR"]
+    config.loss_DSC = best["user_attrs"]["loss_DSC"]
+    config.loss_CE  = best["user_attrs"]["loss_CE"]
     set_seed(config.seed)   # ✦
     trainer = Trainer(config)
     trainer.train()
