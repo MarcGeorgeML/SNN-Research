@@ -160,6 +160,8 @@ class Trainer:
 
     def start_run(self):
         self.run_name = generate_run_name(self.config)
+        self.checkpoint_dir = os.path.join("checkpoints", self.run_name)
+        os.makedirs(self.checkpoint_dir, exist_ok=True)
         mlflow.start_run(run_name=self.run_name)
         mlflow.log_params(self.config.to_dict())
 
@@ -193,9 +195,9 @@ class Trainer:
         mlflow.end_run()
 
     def save_checkpoint(self, epoch, val_f1):                             
-        filename = f"checkpoints/checkpoint_epoch{epoch}_f1{val_f1:.4f}.pt"          
-        torch.save(self.model.state_dict(), filename)                     
-        print(f"  Checkpoint saved → {filename}")                         
+        filename = os.path.join(self.checkpoint_dir, f"checkpoint_epoch{epoch}_f1{val_f1:.4f}.pt")
+        torch.save(self.model.state_dict(), filename)
+        print(f"  Checkpoint saved → {filename}")                       
 
     def run_epoch(self, loader, train=True):
 
