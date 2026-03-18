@@ -1,0 +1,10 @@
+cd C:\Users\Marc\Desktop\Programming\snn-research\final
+
+:: 1. Scan your 6 data folders and build the train/test splits
+python preprocessing\phase1_segmentation\build_dataset_index.py
+
+:: 2. Run Whisper to slice the videos and create the segment dicts (Now automatically saves to segments/ folder!)
+python preprocessing\phase1_segmentation\build_segments.py
+
+:: 3. Run Phase 2 to extract the Audio, Visual, and Text tensors
+python preprocessing\phase2_features\phase2_pipeline.py

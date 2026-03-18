@@ -1,0 +1,7 @@
+data_sorted/**
+features/**
+snn.db
+prompt.txt
+checkpoints/**  
+.venv/**
+preprocessing/segments/**
