@@ -7,6 +7,7 @@ from tqdm import tqdm
 from sklearn.metrics import f1_score, accuracy_score
 
 import mlflow
+from mlflow.tracking import MlflowClient
 import datetime
 import random
 import numpy as np
@@ -56,7 +57,7 @@ class Config:
         self.num_layers = 6
         self.hidden_dim = 1024
 
-        self.T = 8
+        self.T = 8 
         self.spike_tau = 10.0
         self.spike_thr = 1.0
 
@@ -69,6 +70,8 @@ class Config:
 
         self.grad_clip = 1.0         
         self.early_stop_patience = 10
+        
+        self.feature_root = "features"
 
     def to_dict(self):
         return self.__dict__
@@ -91,6 +94,39 @@ def generate_run_name(config):
 
 
 # =========================
+# BEST CONFIG
+# =========================
+def load_config_from_mlflow_run(run_id, tracking_uri):
+    client = MlflowClient(tracking_uri=tracking_uri)
+    run = client.get_run(run_id)
+    params = run.data.params
+
+    config = Config()
+    config.seed = int(params["seed"])
+    config.batch_size = int(params["batch_size"])
+    config.epochs = 50  # final run length
+    config.lr = float(params["lr"])
+    config.weight_decay = float(params["weight_decay"])
+    config.model_dim = int(params["model_dim"])
+    config.num_heads = int(params["num_heads"])
+    config.num_layers = int(params["num_layers"])
+    config.hidden_dim = int(params["hidden_dim"])
+    config.T = int(params["T"])                                             # type: ignore[assignment]
+    config.spike_tau = float(params["spike_tau"])
+    config.spike_thr = float(params["spike_thr"])
+    config.loss_HGR = float(params["loss_HGR"])
+    config.loss_DSC = float(params["loss_DSC"])
+    config.loss_CE = float(params["loss_CE"])
+    config.num_classes = int(params["num_classes"])
+    config.device = params["device"]
+    config.grad_clip = float(params["grad_clip"])
+    config.early_stop_patience = int(params["early_stop_patience"])
+    config.feature_root = params.get("feature_root", "features")
+
+    return config
+
+
+# =========================
 # TRAINER
 # =========================
 class Trainer:
@@ -105,7 +141,7 @@ class Trainer:
         self.epochs_no_improve = 0
 
         self.train_loader, self.val_loader = build_dataloaders(
-            "features",
+            config.feature_root,
             batch_size=config.batch_size
         )
 
@@ -324,20 +360,13 @@ class Trainer:
 
 
 if __name__ == "__main__":
+    finetune_tracking_uri = "sqlite:///C:/Users/Marc/Desktop/Programming/SNN-Research/final/finetuning/snn_mlflow_finetune.db"
+    run_id = "8fa0157a2e664559a4d9694f0a3ef59d"
 
-
-    with open("finetuning/best_config.json", "r", encoding="utf-8") as f:
-        best = json.load(f)
-
-    config = Config()
-    config.lr = best["params"]["lr"]
-    config.weight_decay = best["params"]["weight_decay"]
-    config.grad_clip = best["params"]["grad_clip"]
-    # Loss weights from user_attrs (normalized)
-    config.loss_HGR = best["user_attrs"]["loss_HGR"]
-    config.loss_DSC = best["user_attrs"]["loss_DSC"]
-    config.loss_CE  = best["user_attrs"]["loss_CE"]
-    set_seed(config.seed)   # ✦
+    config = load_config_from_mlflow_run(run_id, finetune_tracking_uri)
+    set_seed(config.seed)
     trainer = Trainer(config)
     trainer.train()
     
+# python Train/train_spikemo.py
+# mlflow ui --backend-store-uri sqlite:///snn.db

@@ -10,10 +10,11 @@ from pathlib import Path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from Train.train_spikemo import Config, Trainer, set_seed
 
+repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 class OptunaTrainer(Trainer):
     def setup_mlflow(self):
-        # Keep Optuna runs separate from your main MLflow DB
-        mlflow.set_tracking_uri("sqlite:///snn_optuna.db")
+        mlflow.set_tracking_uri(f"sqlite:///snn_mlflow_finetune.db")
         mlflow.set_experiment("snn_finetune.db")
 
     def save_checkpoint(self, epoch, val_f1):
@@ -22,6 +23,9 @@ class OptunaTrainer(Trainer):
 
 def objective(trial, epochs):
     config = Config()
+    
+    # set features path
+    config.feature_root = os.path.join(repo_root, "features")
 
     # Phase 1 search space
     config.lr = trial.suggest_float("lr", 1e-5, 5e-4, log=True)
@@ -57,7 +61,7 @@ def main():
     parser.add_argument("--epochs", type=int, default=30)
     args = parser.parse_args()
 
-    storage = "sqlite:///optuna_spikemo.db"
+    storage = "sqlite:///snn_optuna_finetune.db"
     study = optuna.create_study(
         study_name="spikemo_phase1",
         direction="maximize",
@@ -85,4 +89,5 @@ def main():
 if __name__ == "__main__":
     main()
     
-# python finetune/tune_optuna.py --n-trials 100 --epochs 30
+# python finetuning/tune_optuna.py --n-trials 100 --epochs 30
+# mlflow ui --backend-store-uri sqlite:///snn_mlflow_finetune.db
