@@ -157,11 +157,10 @@ class Trainer:
             weight_decay=config.weight_decay
         )
 
-        self.scheduler = optim.lr_scheduler.ReduceLROnPlateau(
+        self.scheduler = optim.lr_scheduler.CosineAnnealingLR(
             self.optimizer,
-            mode='min',
-            factor=0.95,
-            patience=5
+            T_max=50,        
+            eta_min=1e-6     
         )
 
     def build_model(self):
@@ -194,7 +193,7 @@ class Trainer:
 
     def setup_mlflow(self):
         mlflow.set_tracking_uri("sqlite:///snn.db")
-        mlflow.set_experiment("SpikEmo_SNN")
+        mlflow.set_experiment("SpikEmo_SNN_v2")
 
     def start_run(self):
         self.run_name = generate_run_name(self.config)
@@ -331,29 +330,29 @@ class Trainer:
                 train_loss, _, _, _, train_f1, train_acc = train_metrics
                 val_loss, _, _, _, val_f1, val_acc = val_metrics
 
-                self.scheduler.step(val_loss)
+                self.scheduler.step(val_loss) # type: ignore[arg-type]
 
                 if val_f1 > self.best_f1:
                     self.best_f1 = val_f1
                     self.best_epoch = epoch + 1
-                    self.epochs_no_improve = 0                 # ✦ reset counter
-                    self.save_checkpoint(epoch + 1, val_f1)   # ✦ named checkpoint
+                    self.epochs_no_improve = 0                 
+                    self.save_checkpoint(epoch + 1, val_f1)  
                     self.log_best()
                 else:
-                    self.epochs_no_improve += 1                # ✦ increment counter
+                    self.epochs_no_improve += 1             
 
                 print("\n" + "="*50)
                 print(f"Run: {self.run_name}")
                 print(f"Epoch {epoch+1}/{self.config.epochs}")
                 print(f"Train F1: {train_f1:.4f} | Val F1: {val_f1:.4f}")
                 print(f"Best F1:  {self.best_f1:.4f} (epoch {self.best_epoch})")
-                print(f"No improvement: {self.epochs_no_improve}/{self.config.early_stop_patience}")  # ✦
+                print(f"No improvement: {self.epochs_no_improve}/{self.config.early_stop_patience}") 
                 print("="*50)
 
                 # ✦ Early stopping check
-                if self.epochs_no_improve >= self.config.early_stop_patience:    # ✦
-                    print(f"\nEarly stopping triggered after {epoch+1} epochs.")  # ✦
-                    break                                                          # ✦
+                if self.epochs_no_improve >= self.config.early_stop_patience:    
+                    print(f"\nEarly stopping triggered after {epoch+1} epochs.")  
+                    break                                                          
 
         finally:
             self.end_run()
