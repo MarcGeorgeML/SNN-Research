@@ -1,5 +1,4 @@
 
-import json
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -330,7 +329,7 @@ class Trainer:
                 train_loss, _, _, _, train_f1, train_acc = train_metrics
                 val_loss, _, _, _, val_f1, val_acc = val_metrics
 
-                self.scheduler.step(val_loss) # type: ignore[arg-type]
+                self.scheduler.step() # type: ignore[arg-type]
 
                 if val_f1 > self.best_f1:
                     self.best_f1 = val_f1
