@@ -20,12 +20,12 @@ def check_file(path, expected_dim):
     print("✓ File OK")
 
 
-check_file("features_test/train/text.pkl", 768)
-check_file("features_test/train/audio.pkl", 512)
-check_file("features_test/train/visual.pkl", 1000)
+check_file("features/train/text.pkl", 768)
+check_file("features/train/audio.pkl", 768)
+check_file("features/train/visual.pkl", 2048)
 
-check_file("features_test/validation/text.pkl", 768)
-check_file("features_test/validation/audio.pkl", 512)
-check_file("features_test/validation/visual.pkl", 1000)
+check_file("features/validation/text.pkl", 768)
+check_file("features/validation/audio.pkl", 768)
+check_file("features/validation/visual.pkl", 2048)
 
 print("\nAll checks passed.")

@@ -4,7 +4,6 @@ from pathlib import Path
 
 import torch
 from tqdm import tqdm
-
 from video_decoder import extract_audio, extract_frames
 from text_features import TextFeatureExtractor
 from audio_features import AudioFeatureExtractor
@@ -181,10 +180,9 @@ class FeatureBuilder:
             mean_feat = segment_features.mean(dim=0)
             max_feat = segment_features.max(dim=0).values
             pooled = 0.5 * mean_feat + 0.5 * max_feat
-            visual_emb = self.visual_encoder.projection(pooled)
             text_store.append(text_emb[i])
             audio_store.append(audio_emb[i])
-            visual_store.append(visual_emb.cpu())
+            visual_store.append(pooled.cpu())
             label_store.append(batch_labels[i])
 
     def run(self, train_segments, val_segments):

@@ -1,9 +1,9 @@
 from pathlib import Path
 import pickle
-from build_features import FeatureBuilder
+from phase2_features.build_features import FeatureBuilder
 
-TRAIN_SEGMENTS = Path("segments/train_segments.pkl")
-VAL_SEGMENTS = Path("segments/val_segments.pkl")
+TRAIN_SEGMENTS = Path("preprocessing/segments/train_segments.pkl")
+VAL_SEGMENTS = Path("preprocessing/segments/val_segments.pkl")
 
 TEST_SAMPLES = 50
 

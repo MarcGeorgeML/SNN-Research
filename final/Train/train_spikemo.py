@@ -182,8 +182,8 @@ class Trainer:
             num_layers=self.config.num_layers,
             model_dim=self.config.model_dim,
             num_heads=self.config.num_heads,
-            D_m_audio=512,
-            D_m_visual=1000,
+            D_m_audio=768,
+            D_m_visual=2048,
             n_classes=self.config.num_classes,
             spikformer_model=spikformer_model
         )

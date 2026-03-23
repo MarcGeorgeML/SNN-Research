@@ -1,5 +1,6 @@
 data_sorted/**
 features/**
+features_test/**
 snn.db
 prompt.txt
 checkpoints/**  
