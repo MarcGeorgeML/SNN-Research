@@ -19,7 +19,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from dataset.build_dataloader import build_dataloaders
-from Model.SpikEmo_Model import SpikEmo
+from Model.SentiCore_Model import SentiCore
 from Model.spikformer import Spikformer
 
 from Loss.MultiDSCLoss import MultiDSCLoss
@@ -82,7 +82,7 @@ class Config:
 def generate_run_name(config):
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     return (
-        f"SpikEmo"
+        f"SentiCore"
         f"_T{config.T}"
         f"_dim{config.model_dim}"
         f"_h{config.num_heads}"
@@ -173,7 +173,7 @@ class Trainer:
             heads=8
         )
 
-        model = SpikEmo(
+        model = SentiCore(
             dataset="custom",
             multi_attn_flag=True,
             roberta_dim=768,
@@ -192,7 +192,7 @@ class Trainer:
 
     def setup_mlflow(self):
         mlflow.set_tracking_uri("sqlite:///snn.db")
-        mlflow.set_experiment("SpikEmo_SNN_v2")
+        mlflow.set_experiment("SentiCore_SNN_v2")
 
     def start_run(self):
         self.run_name = generate_run_name(self.config)
@@ -366,5 +366,5 @@ if __name__ == "__main__":
     trainer = Trainer(config)
     trainer.train()
     
-# python Train/train_spikemo.py
+# python Train/train_senticore.py
 # mlflow ui --backend-store-uri sqlite:///snn.db

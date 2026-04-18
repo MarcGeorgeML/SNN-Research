@@ -8,7 +8,7 @@ from pathlib import Path
 
 # Add parent folder (final/) to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from Train.train_spikemo import Config, Trainer, set_seed
+from Train.train_senticore import Config, Trainer, set_seed
 
 repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -63,7 +63,7 @@ def main():
 
     storage = "sqlite:///snn_optuna_finetune.db"
     study = optuna.create_study(
-        study_name="spikemo_phase1",
+        study_name="senticore_phase1",
         direction="maximize",
         storage=storage,
         load_if_exists=True

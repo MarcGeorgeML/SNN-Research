@@ -2,10 +2,10 @@ data_sorted/**
 features/**
 features_test/**
 snn.db
-prompt.txt
 checkpoints/**  
 .venv/**
 preprocessing/segments/**
 finetuning/snn_mlflow_finetune.db
 finetuning/snn_optuna_finetune.db
 finetuning/checkpoints/**
+data_sorted.zip

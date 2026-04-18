@@ -8,7 +8,7 @@ from spikingjelly.activation_based import functional
 
 # ── project imports ──────────────────────────────────────────────────────────
 from Model.spikformer import Spikformer                          # models/
-from Model.SpikEmo_Model import SpikEmo                          # models/
+from Model.SentiCore_Model import SpikEmo                          # models/
 from preprocessing.whisper_segmenter import WhisperSegmenter             # preprocessing/
 from preprocessing.video_decoder import extract_audio, extract_frames   # preprocessing/
 from preprocessing.text_features import TextFeatureExtractor             # preprocessing/

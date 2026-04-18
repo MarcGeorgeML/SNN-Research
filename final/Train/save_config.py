@@ -75,7 +75,7 @@ def cast_value(key, value):
 
 # ─────────────────────────────────────────────────────────────────────────────
 
-def list_runs(client, experiment_name="SpikEmo_SNN_v2"):
+def list_runs(client, experiment_name="SentiCore_SNN_v2"):
     """Print all finished runs in the experiment."""
 
     experiment = client.get_experiment_by_name(experiment_name)
@@ -164,7 +164,7 @@ def save_config(inference_cfg, output_path, run_id, run_name):
     print()
 
 
-def interactive_pick_run(client, experiment_name="SpikEmo_SNN_v2"):
+def interactive_pick_run(client, experiment_name="SentiCore_SNN_v2"):
     """Print runs and ask user to paste a run ID."""
 
     list_runs(client, experiment_name)
@@ -197,8 +197,8 @@ def parse_args():
     parser.add_argument(
         "--experiment",
         type=str,
-        default="SpikEmo_SNN_v2",
-        help="MLflow experiment name (default: SpikEmo_SNN_v2)",
+        default="SentiCore_SNN_v2",
+        help="MLflow experiment name (default: SentiCore_SNN_v2)",
     )
     parser.add_argument(
         "--output",

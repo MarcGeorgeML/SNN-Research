@@ -7,7 +7,7 @@ mlflow.set_tracking_uri(
 )
 
 run_id = "8fa0157a2e664559a4d9694f0a3ef59d"
-expected_name = "SpikEmo_T8_dim256_h4_lr4.9334886565290195e-05_bs32_20260320_132547"
+expected_name = "SentiCore_T8_dim256_h4_lr4.9334886565290195e-05_bs32_20260320_132547"
 
 client = MlflowClient()
 run = client.get_run(run_id)
