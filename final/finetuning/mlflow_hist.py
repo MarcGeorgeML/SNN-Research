@@ -1,9 +1,11 @@
 import sqlite3
 import pandas as pd
 
-MLFLOW_DB = r"C:\Users\Marc\Desktop\Programming\SNN-Research\final\finetuning\snn_mlflow_finetune.db"
+from pathlib import Path
 
-conn = sqlite3.connect(MLFLOW_DB)
+MLFLOW_DB = Path(__file__).resolve().parent / "snn_mlflow_finetune.db"
+
+conn = sqlite3.connect(str(MLFLOW_DB))
 
 # Pick experiment with most runs
 exp_df = pd.read_sql_query("""

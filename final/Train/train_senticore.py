@@ -8,6 +8,7 @@ from sklearn.metrics import f1_score, accuracy_score
 import mlflow
 from mlflow.tracking import MlflowClient
 import datetime
+from pathlib import Path
 import random
 import numpy as np
 
@@ -191,7 +192,11 @@ class Trainer:
         return model.to(self.device)
 
     def setup_mlflow(self):
-        mlflow.set_tracking_uri("sqlite:///snn.db")
+        # store final-training MLflow DB inside final/finetuning/snn.db
+        finetuning_dir = Path(__file__).resolve().parent.parent / "finetuning"
+        finetuning_dir.mkdir(parents=True, exist_ok=True)
+        db_path = finetuning_dir / "snn.db"
+        mlflow.set_tracking_uri(f"sqlite:///{db_path.as_posix()}")
         mlflow.set_experiment("SentiCore_SNN_v2")
 
     def start_run(self):
@@ -358,7 +363,8 @@ class Trainer:
 
 
 if __name__ == "__main__":
-    finetune_tracking_uri = "sqlite:///C:/Users/Marc/Desktop/Programming/SNN-Research/final/finetuning/snn_mlflow_finetune.db"
+    finetuning_dir = Path(__file__).resolve().parent.parent / "finetuning"
+    finetune_tracking_uri = f"sqlite:///{(finetuning_dir / 'snn_mlflow_finetune.db').as_posix()}"
     run_id = "8fa0157a2e664559a4d9694f0a3ef59d"
 
     config = load_config_from_mlflow_run(run_id, finetune_tracking_uri)

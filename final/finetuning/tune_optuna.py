@@ -14,7 +14,11 @@ repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 class OptunaTrainer(Trainer):
     def setup_mlflow(self):
-        mlflow.set_tracking_uri(f"sqlite:///snn_mlflow_finetune.db")
+        # store finetune MLflow DB inside final/finetuning
+        finetuning_dir = Path(__file__).resolve().parent
+        finetuning_dir.mkdir(parents=True, exist_ok=True)
+        db_path = finetuning_dir / "snn_mlflow_finetune.db"
+        mlflow.set_tracking_uri(f"sqlite:///{db_path.as_posix()}")
         mlflow.set_experiment("snn_finetune.db")
 
     def save_checkpoint(self, epoch, val_f1):
@@ -61,7 +65,8 @@ def main():
     parser.add_argument("--epochs", type=int, default=30)
     args = parser.parse_args()
 
-    storage = "sqlite:///snn_optuna_finetune.db"
+    finetuning_dir = Path(__file__).resolve().parent
+    storage = f"sqlite:///{(finetuning_dir / 'snn_optuna_finetune.db').as_posix()}"
     study = optuna.create_study(
         study_name="senticore_phase1",
         direction="maximize",

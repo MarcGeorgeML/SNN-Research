@@ -21,8 +21,11 @@ from pathlib import Path
 from mlflow.tracking import MlflowClient
 
 
-# ── default tracking URI — change this to match your setup ──────────────────
-DEFAULT_TRACKING_URI = "sqlite:///C:/Users/Marc/Desktop/Programming/SNN-Research/final/finetuning/snn_mlflow_finetune.db"
+# ── default tracking URI — located in final/finetuning (no absolute paths) ──
+from pathlib import Path as _Path
+_FINETUNING_DIR = _Path(__file__).resolve().parent.parent / "finetuning"
+_DEFAULT_DB = _FINETUNING_DIR / "snn_mlflow_finetune.db"
+DEFAULT_TRACKING_URI = f"sqlite:///{_DEFAULT_DB.as_posix()}"
 
 # ── key remapping: MLflow param name → inference config key ─────────────────
 # These are the keys logged by Config.to_dict() that need renaming for the
